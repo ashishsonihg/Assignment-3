@@ -9,19 +9,28 @@
     <title></title>
   </head>
   <body>
-    <h1> TO-DO LIST</h1>
-    <div class="adder">
-      <input type="text" class="input" placeholder="Add items "/>
-      <span class="add">+</span>
-    </div>
-    <ul id='lis'>
+    <section id="toDo">
+      <h1> TO-DO LIST</h1>
+      <div id="buttons">
+        <button type="button" name="button" onclick="saveList()">Save list</button>
+<!--        <button type="button" name="button" onclick="populatePage()">Populate Page</button>-->
+        <button type="button" name="button" onclick="clearList()">Clear list</button>
+      </div>
+      <div class="adder">
+        <input type="text" class="input" placeholder="Add items "/>
+        <span class="add">+</span>
+      </div>
+      <ul id='lis'>
 
-    </ul>
+      </ul>
+    </section>
 
-      <button type="button" name="button" onclick="saveList()">Save list</button>
-      <button type="button" name="button" onclick="populatePage()">Populate Page</button>
-      <button type="button" name="button" onclick="clearList()">Clear list</button>
-  
+    <section id="completed">
+      <h1> completed</h1>
+      <div class="completed" id="completedList">
+      </div>
+    </section>
+
 
     <script src="script.js">
 

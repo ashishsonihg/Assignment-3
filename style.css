@@ -3,6 +3,7 @@ body {
   background-color:#1f6effad;
   font-family: 'arial', sans-serif;
   display: grid;
+  grid-template-columns: 1fr 1fr;
 
 }
 h1{
@@ -34,9 +35,12 @@ h1{
 
 }
 
+#buttons{
+  display: flex;
+}
 button:hover{
   background-color: #222222;
-  
+
 }
 span {
   position: absolute;
@@ -62,7 +66,7 @@ ul {
 li{
     border-radius: 4px;
 }
-.draggable {
+.draggable,.draggable-completed {
   will-change: transform;
   font-family: $fontFamily;
   font-weight: 800;
@@ -114,8 +118,25 @@ button{
   margin: 5px auto;
 
 }
+section{
+  display: grid;
+  grid-template-rows: 120px 60px 60px auto;
+}
+h1{
+  text-transform: uppercase;
+}
 
 .control{
+}
+.completed{
+  border: dashed #dddddd;
+    border-width: 2px;
+    border-radius: 10px;
+    grid-row-start: 3;
+    grid-row-end: 5;
+    height: 70vh;
+    margin: 0 4vw
+
 }
 /*
 

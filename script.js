@@ -1,12 +1,13 @@
 var btn = document.querySelector('.add');
 var remove = document.querySelector('.draggable');
 
+
 function dragStart(e) {
   this.style.opacity = '0.4';
   dragSrcEl = this;
   e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/html', this.innerHTML);
-};
+  e.dataTransfer.setData('text', this.innerHTML);
+}
 
 function dragEnter(e) {
   this.classList.add('over');
@@ -23,10 +24,37 @@ function dragOver(e) {
   return false;
 }
 
+
 function dragDrop(e) {
-  if (dragSrcEl != this) {
+  if(this.className=="completed over" && dragSrcEl != this){
+    var newItem = e.dataTransfer.getData('text');
+    var li = document.createElement('li');
+    var attr = document.createAttribute('draggable');
+    var div = document.querySelector('#completedList');
+    li.className = 'draggable-completed';
+    attr.value = 'true';
+    li.setAttributeNode(attr);
+    li.innerHTML=newItem;
+    div.appendChild(li);
+    addEventsDragAndDrop(li);
+    document.getElementById(newItem).remove();
+  }
+  else if(this.id=="lis" && dragSrcEl.className=="completed"){
+    var newItem = e.dataTransfer.getData('text');
+    var li = document.createElement('li');
+    var attr = document.createAttribute('draggable');
+    var div = document.querySelector('#lis');
+    li.className = 'draggable';
+    attr.value = 'true';
+    li.setAttributeNode(attr);
+    li.innerHTML=newItem;
+    div.appendChild(li);
+    addEventsDragAndDrop(li);
+    document.getElementById(newItem).remove();
+  }
+  else if(dragSrcEl.className=="draggable" && this.className=='draggable over') {
     dragSrcEl.innerHTML = this.innerHTML;
-    this.innerHTML = e.dataTransfer.getData('text/html');
+    this.innerHTML = e.dataTransfer.getData('text');
   }
   return false;
 }
@@ -59,18 +87,22 @@ function addNewItem() {
     document.querySelector('.input').value = '';
     var li = document.createElement('li');
     var attr = document.createAttribute('draggable');
+    var id=document.createAttribute('id');
     var ul = document.querySelector('ul');
     li.className = 'draggable';
     attr.value = 'true';
+    id.value=newItem;
     li.setAttributeNode(attr);
+    li.setAttributeNode(id);
     li.appendChild(document.createTextNode(newItem));
     ul.appendChild(li);
+
     addEventsDragAndDrop(li);
   }
 }
 
 btn.addEventListener('click', addNewItem);
-
+addEventsDragAndDrop(document.getElementById('completedList'));
 
 
 
@@ -78,10 +110,20 @@ btn.addEventListener('click', addNewItem);
 
 function saveList(){
   var listItens = document.getElementsByClassName('draggable');
-  localStorage.setItem("count",listItens.length);
+  var list="";
   for(let i=0;i<listItens.length;i++){
-    localStorage.setItem(i,listItens[i].innerHTML);
+    list+=listItens[i].innerHTML+",";
   }
+  list=list.substring(0, list.length - 1);
+  localStorage.setItem("todo",list);
+
+  listItens = document.getElementsByClassName('draggable-completed');
+  list="";
+  for(let i=0;i<listItens.length;i++){
+    list+=listItens[i].innerHTML+",";
+  }
+  list=list.substring(0, list.length - 1);
+  localStorage.setItem("completed",list);
 }
 
 function clearList()
@@ -91,20 +133,37 @@ function clearList()
 }
 
 function populatePage(){
+
   let pop=document.getElementById('lis');
-  let storedValues=""
-  for(let i=0;i<localStorage.getItem('count');i++){
-    storedValues+="<li class='draggable' draggable='true'>"+localStorage.getItem(i)+"</li>";
+  let com=document.getElementById('completedList');
+  com.innerHTML="";
+  pop.innerHTML="";
+  let storedValues="";
+  if(localStorage.getItem('todo'))
+  {
+    list=localStorage.getItem('todo').split(',');
+    for(let i=0;i<list.length;i++){
+      storedValues+="<li class='draggable' draggable='true' id='"+list[i]+"'>"+list[i]+"</li>";
+    }
+    pop.innerHTML=storedValues;
+    var listItens = document.querySelectorAll('.draggable');
+    [].forEach.call(listItens, function(item) {
+      addEventsDragAndDrop(item);
+    });
   }
 
-  pop.innerHTML=storedValues;
-  var listItens = document.querySelectorAll('.draggable');
-  [].forEach.call(listItens, function(item) {
-    addEventsDragAndDrop(item);
-  });
+  if(localStorage.getItem('completed')){
+    list=localStorage.getItem('completed').split(',');
+    storedValues="";
+    for(let i=0;i<list.length;i++){
+      storedValues+="<li class='draggable-completed' draggable='true' id='"+list[i]+"'>"+list[i]+"</li>";
+    }
 
+    com.innerHTML=storedValues;
+    var listItens = document.querySelectorAll('.draggable-completed');
+    [].forEach.call(listItens, function(item) {
+      addEventsDragAndDrop(item);
+    });
+  }
 }
-
-function saveItem(){
-
-}
+populatePage();
